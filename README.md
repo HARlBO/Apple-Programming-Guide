@@ -4,3 +4,5 @@
 
 - [Concurrency Programming Guide](./Concurrency-Programming-Guide.md)
 - [Dispath Queues](./Dispath-Queues.md)
+
+- [Increasing Performance by Reducing Dynamic Dispatch](./Increasing-Performance-by-Reducing-Dynamic-Dispatch.md)
