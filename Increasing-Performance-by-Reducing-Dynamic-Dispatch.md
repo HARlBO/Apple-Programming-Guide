@@ -11,8 +11,8 @@
     	var velocity = 100.0
     
     	func updatePoint(newPoint: (Double, Double), newVelocity: Double) {
-    	point = newPoint
-    	velocity = newVelocity
+    	    point = newPoint
+    	    velocity = newVelocity
     	}
     
     	func update(newP: (Double, Double), newV: Double) {
