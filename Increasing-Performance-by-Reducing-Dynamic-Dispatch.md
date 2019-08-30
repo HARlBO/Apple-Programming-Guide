@@ -11,8 +11,8 @@
     	var velocity = 100.0
     
     	func updatePoint(newPoint: (Double, Double), newVelocity: Double) {
-    		point = newPoint
-    		velocity = newVelocity
+    	point = newPoint
+    	velocity = newVelocity
     	}
     
     	func update(newP: (Double, Double), newV: Double) {
@@ -54,6 +54,7 @@ final 키워드는 클래스, 메소드 또는 프로퍼티의 선언이 overrid
     	}
     }
 ```
+
 클래스 자신의 final을 표기 함으로써 전체 클래스에 적용 가능합니다. 이거슨 클래스가 서브클래싱 되는것을 막고, 클래스의 모든 함수와 프로퍼티 또한 final임을 나타냅니다.
 ```swift
     final class ParticleModle {
@@ -93,6 +94,7 @@ final과 마찬가지로, 클래스 선언 자체에 private을 적용하여 클
     	// ...
     }
 ```
+
 ### internal 선언에 final을 추론 하기 위해 전체 모듈 최적화를 사용하라
 
 internal 접근자가 있는 선언(아무것도 선언 되지 않았을 때 default인)은 그들이 선언 된 모듈 안에서만 가시적입니다. Swift는 보통 모듈을 구성하는 파일을 개별적으로 컴파일 하기 때문에, 컴파일러는 다른 파일에서 internal 선언이 override 되었는지 아닌지 알 수가 없습니다. 하지만, 전체 모듈 최적화가 가능하면, 모든 모듈이 동시에 같이 컴파일됩니다. 이것은 컴파일러가 모듈 전체를 추론 할 수 있고 가시적인 override가 없다면 선언부의 internal을 final로 추론 할 수 있게 합니다.
@@ -117,6 +119,7 @@ internal 접근자가 있는 선언(아무것도 선언 되지 않았을 때 def
     		p.update((i * sin(i), i), newV:i*1000)
     	}
 ```
+
 전체 모듈 최적화의 부분을 컴파일 할때, 컴파일러는 point, velocity 프로퍼티 그리고 updatePoint()호출 을 통해 final을 추론 할 수 있습니다. 반대로, update()는 update()가 public 접근자를 갖고 있기 때문에 추론 될 수 없습니다.
 
 
