@@ -26,3 +26,17 @@ Main dispatch queue는 메인 쓰레드에서 task를 실행 할 수 있는 전�
 dispatch queue를 생성할 필요는 없지만, 그것들이 적절히 빠져 나가는지 꼭 알아야 한다. queue가 어떻게 관리 되는지에 대한  더 많은 정보는, Performing Tasks on the Main Thread 에서 확인 할 수 있습니다.
 
 > interleave : 컴퓨터 하드디스크의 성능을 높이기 위해 데이터를 서로 인접하지 않게 배열하는 방식을 말한다. 인터리브(interleave)라는 단어는 ‘교차로 배치하다’라는 뜻이며, 이를 통해 디스크 드라이브를 좀더 효율적으로 만들수 있다. 인터리브는 기억장치를 몇 개의 부분으로 나누어서 메모리 액세스를 동시에 할 수 있게 함으로써 복수의 명령을 처리하여 메모리 액세스의 효율화를 도모하는 것이다. 대부분의 하드디스크는 드라이브의 속도와 운영체제(OS), 응용 프로그램 등에 영향을 받기 때문에 인터리브 값을 미리 설정하지는 않는다. 인터리브 값이 작을수록 하드디스크 드라이브의 속도가 빨라진다.
+
+앱에 동시성을 추가하는 것에 관해서, dispath queue는 쓰레드에 비해 몇가지 장점을 제공합니다. 가장 직접적인 장점은 work-queue(작업 대기열) 프로그래밍 모델의 간결성입니다. 쓰레드에서는, 실행하고 싶은 작업과 쓰레드 자체의 생성과 관리를 위한 코드를 작성해야 합니다. Dispatch queue는 쓰레드의 생성과 관리에 대한 걱정 없이 실제로 실행하고 싶은 작업에만 집중 할 수 있게 해줍니다. 그 대신에, 시스템이 당신을 위해 모든 쓰레드의 생성과 관리를 처리합니다. 어떤 단일 앱에서 할 수 있는 것 보다 시스템이 쓰레드를 훨씬 더 효율적으로 관리 할 수 있다는 것이 장점입니다. 시스템은 사용 가능 한 자원과 현재 시스템의 상태에 기반해 쓰레드의 개수를 동적으로 늘릴 수 있습니다. 또한, 보통 시스템은 쓰레드를 직접 생성했을 때 보다 task의 작동을 더 빠르게 시작 할 수 있습니다.
+
+dispatch queue에 대해 당신의 코드를 재작성 하는 것이 어렵다고 생각 할 수 있지만, 쓰레드에 관한 코드를 작성하는 것보다 dispatch queue로 작성하는 것이 보통 쉽습니다. 코드 작성의 핵심은 독립적이고 비동기로 실행 할 수 있게 task를 설계하는 것입니다. (이것은 사실 쓰레드와 dispatch queue 모두에 해당됩니다.) 하지만, dispatch queue는 예측 가능성이라는 이점을 갖습니다. 만약 두개의 task가 같은 공유 된 자원에 접근 하지만 다른 쓰레드에서 작동 된다면, 쓰레드는 리소스를 먼저 수정할 것 이고, 당신은 두개의 task가 동시에 그 리소스를 수정하지 않도록 보장하기 위해 lock을 해야 필요가 있습니다. dispatch queue로는, 주어진 시간에 하나의  task만 수정 되는 것을 보장해 task를 모두 serial dipatch queue에 추가 할 수 있습니다. 이러한 queue 기반 동기화 타입은 lock보다 더 효율적입니다. lock은 항상 경쟁, 경쟁이 없는 두 케이스에 대해 높은 비용의 kernel trap을 요구하는 반면에, dispatch queue는 주로 앱의 process 공간에서 작동하고 꼭 필요한 경우에만 kernel에 요청하기 때문입니다.
+
+비록 serial queue 에서 작동하는 두개의 task가 동시에 작동 되지 않는 다는 것을 지적 할 수 있겠지만, 두개의 쓰레드가 동시에 lock이 걸리면, 쓰레드가 제공하는 동시성을 잃거나 상당히 감소 할 수 있다는 것을 기억해야 합니다. 더 중요한 것은, 쓰레드 모델은 kernel과 사용자 공간의 메모리 모두 사용하는 두개의 쓰레드 생성을 요구합니다. Dispatch queue는 쓰레드에 대해 동일한 메모리 손실을 요구 하지 않고, 사용 되는 쓰레드는 바쁘게 유지 되고, 차단되지 않습니다.
+
+dispatch queue에 대해 기억 해야하는 중요한 포인트는 다음과 같습니다.
+
+- Dispatch queue는 다른 dispatch queue를 준수하여 동시에 task를 실행합니다. 이 쓰레드의 직렬화는 single dispatch queue의 task로 제한됩니다.
+- 시스템이 동시에 실행할 task의 개수를 결정합니다. 그러므로, 100개의 다른 queue의 100개의 task를 갖는 앱은 모든 task를 동시에 실행하지 않을 것 입니다.
+- 시스템은 시작할 새로운 task를 선택할 때 queue의 우선순위 레벨을 고려합니다. serial queue의 우선순위를 정하는 법에 대한 정보는, Providing a Clean Up Function For a Queue에서 봅시다.
+- queue에 있는 task는 queue에 추가 되는 순간 실행 할 준비가 되어야 합니다. (만약 CoCoa operation object를 전에 사용했다면, model operation에서 사용하던 것과는 다른 방식 입니다.)
+- Private dispatch queue는 reference-counted 객체입니다. 당신의 코드에 queue를 유지하는 것에 대해, dipatch source가 queue에 참고 될 수 있으며 또한 retain count를 증가 시킬 수 있다는 것을 유의해야 합니다. 그러므로, 모든 dispatch source가 취소 되었는지 확신 해야하고 모든 reatin call이 적절한 release call과 균형이 맞도록 해야 합니다. queue를 유지, 해제 하는 것에 대한 더 많은 정보는 Memory Mangament for Dispatch Queues에서 보세요. dispatch source에 대한 추가 정보는, About Dispatch Sources를 확인하세요.
