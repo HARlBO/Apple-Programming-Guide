@@ -40,3 +40,17 @@ dispatch queue에 대해 기억 해야하는 중요한 포인트는 다음과 �
 - 시스템은 시작할 새로운 task를 선택할 때 queue의 우선순위 레벨을 고려합니다. serial queue의 우선순위를 정하는 법에 대한 정보는, Providing a Clean Up Function For a Queue에서 봅시다.
 - queue에 있는 task는 queue에 추가 되는 순간 실행 할 준비가 되어야 합니다. (만약 CoCoa operation object를 전에 사용했다면, model operation에서 사용하던 것과는 다른 방식 입니다.)
 - Private dispatch queue는 reference-counted 객체입니다. 당신의 코드에 queue를 유지하는 것에 대해, dipatch source가 queue에 참고 될 수 있으며 또한 retain count를 증가 시킬 수 있다는 것을 유의해야 합니다. 그러므로, 모든 dispatch source가 취소 되었는지 확신 해야하고 모든 reatin call이 적절한 release call과 균형이 맞도록 해야 합니다. queue를 유지, 해제 하는 것에 대한 더 많은 정보는 Memory Mangament for Dispatch Queues에서 보세요. dispatch source에 대한 추가 정보는, About Dispatch Sources를 확인하세요.
+
+
+### Queue 기반 기술들
+
+dispatch queue 뿐만 아니라, Grand Central Dispatch는 몇가지 기술들을 제공합니다.
+
+표 3-2 dipatch queue를 사용하는 기술들
+
+- Dispatch groups
+dispatch group은 completion을 위한 블록 객체의 집합을 모니터링 하기 위한 방법입니다. (블록들을 필요에 따라 동기적으로 또는 비동기적으로 모니터링 할 수 있습니다.) Group은 다른 task의 completion에  따라 코드의 유용한 동기화 매커니즘을 제공합니다. group을 사용하는 더 많은 정보는, Waiting on Groups of Queued Tasks에서 확인 할 수 있습니다.
+- Dispatch semaphores
+dispatch semaphore은 전통적인 semaphore와 비슷하지만 일반적으로 더 효율 적입니다. Dispatch semaphore은 semaphore를 사용 할 수 없어 calling thread가 차단 될 필요가 있을 경우에만     kernel로 호출됩니다. semaphore가 사용 가능하다면, kernel 호출은 수행되지 않습니다. dispatch semaphore 사용 방법에 대한 예시는, Using Dispatch Semaphores to Regulate the Use of Finite Resources를 확인하세요.
+- Dispatch sources
+dispatch source는 시스템 이벤트의 특정한 타입에 대한 응답 notification을 생성합니다. dispatch source를 notification, signal, descriptor 같은 이벤트들을 다른 것들 사이에서 처리하는 이벤트 모니터링 하는데에 사용 할 수 있습니다. 이벤트가 발생하면, dispatch source는  특정 dispatch queue 처리를 위해 비동기적으로 task 코드를 전송합니다. dispatch source를 사용하고 생성하는 더 자세한 내용은, Dispatch Sources를 확인하세요.
