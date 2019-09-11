@@ -48,18 +48,17 @@ dispatch queue 뿐만 아니라, Grand Central Dispatch는 몇가지 기술들�
 
 표 3-2 dipatch queue를 사용하는 기술들
 
-- Dispatch groups
-dispatch group은 completion을 위한 블록 객체의 집합을 모니터링 하기 위한 방법입니다. (블록들을 필요에 따라 동기적으로 또는 비동기적으로 모니터링 할 수 있습니다.) Group은 다른 task의 completion에  따라 코드의 유용한 동기화 매커니즘을 제공합니다. group을 사용하는 더 많은 정보는, Waiting on Groups of Queued Tasks에서 확인 할 수 있습니다.
-- Dispatch semaphores
-dispatch semaphore은 전통적인 semaphore와 비슷하지만 일반적으로 더 효율 적입니다. Dispatch semaphore은 semaphore를 사용 할 수 없어 calling thread가 차단 될 필요가 있을 경우에만     kernel로 호출됩니다. semaphore가 사용 가능하다면, kernel 호출은 수행되지 않습니다. dispatch semaphore 사용 방법에 대한 예시는, Using Dispatch Semaphores to Regulate the Use of Finite Resources를 확인하세요.
-- Dispatch sources
-dispatch source는 시스템 이벤트의 특정한 타입에 대한 응답 notification을 생성합니다. dispatch source를 notification, signal, descriptor 같은 이벤트들을 다른 것들 사이에서 처리하는 이벤트 모니터링 하는데에 사용 할 수 있습니다. 이벤트가 발생하면, dispatch source는  특정 dispatch queue 처리를 위해 비동기적으로 task 코드를 전송합니다. dispatch source를 사용하고 생성하는 더 자세한 내용은, Dispatch Sources를 확인하세요.
+| Technology              | Description                                                  |
+| ----------------------- | ------------------------------------------------------------ |
+| Dispatch groups|dispatch group은 completion을 위한 블록 객체의 집합을 모니터링 하기 위한 방법입니다. (블록들을 필요에 따라 동기적으로 또는 비동기적으로 모니터링 할 수 있습니다.) Group은 다른 task의 completion에  따라 코드의 유용한 동기화 매커니즘을 제공합니다. group을 사용하는 더 많은 정보는, Waiting on Groups of Queued Tasks에서 확인 할 수 있습니다.|
+| Dispatch semaphores|dispatch semaphore은 전통적인 semaphore와 비슷하지만 일반적으로 더 효율 적입니다. Dispatch semaphore은 semaphore를 사용 할 수 없어 calling thread가 차단 될 필요가 있을 경우에만     kernel로 호출됩니다. semaphore가 사용 가능하다면, kernel 호출은 수행되지 않습니다. dispatch semaphore 사용 방법에 대한 예시는, Using Dispatch Semaphores to Regulate the Use of Finite Resources를 확인하세요.|
+| Dispatch sources|dispatch source는 시스템 이벤트의 특정한 타입에 대한 응답 notification을 생성합니다. dispatch source를 notification, signal, descriptor 같은 이벤트들을 다른 것들 사이에서 처리하는 이벤트 모니터링 하는데에 사용 할 수 있습니다. 이벤트가 발생하면, dispatch source는  특정 dispatch queue 처리를 위해 비동기적으로 task 코드를 전송합니다. dispatch source를 사용하고 생성하는 더 자세한 내용은, Dispatch Sources를 확인하세요.|
 
 ### Block을 사용해서 task를 구현하기
 
 Block object는 C, Objective-C 그리고 C++ 코드에서 사용 할 수 있는 C 기반 언어의 기능입니다. Block은 자신을 포함한 작업 단위를 쉽게 정의할 수 있게 해줍니다. 비록 함수 포인터와 유사하게 보일 수 있지만, block은 실제로 객체와 유사한 기본 자료 구조로 표현되고 컴파일러에 의해 생성되고 관리됩니다. 컴파일러는 당신이 제공한 코드를 (관련 데이터와 함께) 패키지화 하고 그것을 heap에 들어 갈 수 있는 형식으로 캡슐화 하고 앱으로 전달합니다.
 
-block의 중요한 장점 중 하나는 lexical scope(정적 범위) 외부에서도 변수를 사용 할 수 있는 능력입니다. block을 함수나 메소드 내부에 정의하면, block은 어떤면에서 전통적인 code block 같이 작동됩니다. 예를 들어, block은 부모 scope에 정의된 변수의 값을 읽을 수 있습니다. block에 의해 접근 된 변수는 heap에 있는  block 데이터 구조에 복사되어 block이 추후에 접근 할 수 있습니다. block이 dispatch queue에 추가 되면, 이 값들은 일반적으로 읽기전용 타입으로 남아 있어야합니다. 하지만, 동기적으로 실행되는 block은 _block 키워드가 붙은 변수 사용하여 부모의 호출 scope로 데이터를 반환하기 위해서도 사용 할 수 있습니다.
+block의 중요한 장점 중 하나는 lexical scope(정적 범위) 외부에서도 변수를 사용 할 수 있는 능력입니다. block을 함수나 메소드 내부에 정의하면, block은 어떤면에서 전통적인 code block 같이 작동됩니다. 예를 들어, block은 부모 scope에 정의된 변수의 값을 읽을 수 있습니다. block에 의해 접근 된 변수는 heap에 있는  block 데이터 구조에 복사되어 block이 추후에 접근 할 수 있습니다. block이 dispatch queue에 추가 되면, 이 값들은 일반적으로 읽기전용 타입으로 남아 있어야합니다. 하지만, 동기적으로 실행되는 block은 `_block` 키워드가 붙은 변수 사용하여 부모의 호출 scope로 데이터를 반환하기 위해서도 사용 할 수 있습니다.
 
 > lexical scope : 정적 범위라고도 하며, 프로그램 작성시 프로그램 내에서 선언된 변수의 위치에 의하여 그 변수가 사용될 수 있는 범위가 결정되는 것을 말한다. 변수가 선언된 부프로그램 내에서는 그 변수를 사용할 수 있지만 선언된 부프로그램 밖에서는 사용할 수 없다. (컴퓨터인터넷IT용어대사전)
 
