@@ -11,6 +11,7 @@ Dispatch queues는 앱에서 task를 비동기적이고 동시에 task를 수행
 dispatch queue는 전송한 task들을 관리하는 객체와 유사한 구조입니다. 모든 dispatxh queue들은 선입선출(FIFO) 자료 구조 입니다. 그러므로, queue에 추가된 task는 그것들이 추가 된 순서와 항상 같은 순서로 시작됩니다. GCD는 자동으로 일부 dispath queue를 제공하지만, 특정 용도를 위해서 당신이 생성할 수 도 있습니다. 표 3-1은 당신의 앱에서 사용 가능한 dispatch queue의 종류와 사용 방법을 나열하고 있습니다.
 
 표 3-1 dispatch queue의 종류
+
 | Type                    | Description                                                  |
 | ----------------------- | ------------------------------------------------------------ |
 | Serial|Serial queue는 (private dispath queue로도 알려진)는 queue에 추가된 순서대로 한번에 한 개의 task를 수행합니다. 현재 실행 중인 task는 dispatch queue에 의해 관리되는 고유한 쓰레드(task마다 달라질 수 있는)에서 작동한다. Serial queue는 보통 특정 자원에 대한 접근을 동기화 하는데 사용됩니다.
