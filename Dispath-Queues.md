@@ -77,3 +77,13 @@ block의 중요한 장점 중 하나는 lexical scope(정적 범위) 외부에�
     //Excute the block
     aBlock(789); // prints : 123, 456, 789
     ```
+
+아래는 block 설계 시 고려 해야 할 몇가지 주요 가이드라인들에 대한 요약입니다:
+
+- dispatch queue를 사용해 비동기적으로 수행하기를 원하는 block은,  부모 함수 또는 메소드에서 스칼라 변수를 캡처하고 block 안에서 그것을 사용하는것이 안전합니다. 하지만, calling context에 의해 할당되고 삭제 되는 큰 구조체나 다른 포인터 기반 변수들을 캡처 해서는 안됩니다. block이 실행 될 때 까지는, 포인터에 의해 참조되는 메모리는 사라질 수 있습니다. 당연히, 메모리(혹은 객체)를 직접 할당하고 해당 block에 메모리의 소유권을 넘기는 것은 안전합니다.
+- Dispatch queue는 추가 된 block을 복사하고, 실행을 완료 하였을 때 block을 해제 합니다. 즉, block을 추가하기 전에 명시적으로 복사 해 줄 필요가 없습니다.
+- 비록 작은 task를 실행 시키는데에 queue가 원시 쓰레드보다 더 효율적이지만, block을 생성하고 queue에서 실행하는 것에는 여전히 오버헤드가 있습니다. 만약 block이 너무 적은 일을 한다면, queue에 dispatch하는 것 보다 inline으로 실행하는 것이 훨씬 저렴 할 수 있습니다. block이 너무 적은 일은 하고 있는 것을 알리기 위해서는 perfomance tool을 이용해 각각 경로의 메트릭을 수집하고 그것들을 비교해야 합니다.
+- 기본 쓰레드를 기준으로 데이터를 캐시하지 말고 다른 블록에서 데이터를 접근 할 수 있도록 예상해야 합니다. 만약 같은 queue의 task가 데이터를 공유한다면, 데이터를 저장하는 대신 dispatxh queue의 context pointer을 사용하세요. dispath queue의 context data에 접근 하는 방법에 대한 더 많은 정보는 Storing Custom Context Information을 확인하세요.
+- 만약 block이 몇 개 이상의 Objective-C 객체를 생성 한다면, 그 객체들의 메모리 관리를 다루기 위해 block 코드를 @autorelease block으로 감싸야 할 것 입니다. 비록 GCD dispatch queue는 고유 autorelease pools를 갖고 있지만, pool이 언제 비울지 보장하지 않습니다. 만약 앱이 메모리에 제약이 있다면, 당신만의 autorelase pool을 생성하는 것이 autorelease된 객체를 더욱 일정한 간격으로 메모리를 해제할 수 있게 해줍니다.
+
+선언과 사용하는 법을 포함한 block에 대한 더 많은 정보는, Blocks Programming Topics를 확인하세요. dispatch queue에 block을 추가 하는 방법은, Adding Tasks to Queue를 참고하세요.
