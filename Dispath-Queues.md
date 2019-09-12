@@ -35,7 +35,7 @@ dispatch queue에 대해 기억 해야하는 중요한 포인트는 다음과 �
 - Private dispatch queue는 reference-counted 객체입니다. 당신의 코드에 queue를 유지하는 것에 대해, dipatch source가 queue에 참고 될 수 있으며 또한 retain count를 증가 시킬 수 있다는 것을 유의해야 합니다. 그러므로, 모든 dispatch source가 취소 되었는지 확신 해야하고 모든 reatin call이 적절한 release call과 균형이 맞도록 해야 합니다. queue를 유지, 해제 하는 것에 대한 더 많은 정보는 Memory Mangament for Dispatch Queues에서 보세요. dispatch source에 대한 추가 정보는, About Dispatch Sources를 확인하세요.
 
 
-### Queue 기반 기술들
+## Queue 기반 기술들
 
 dispatch queue 뿐만 아니라, Grand Central Dispatch는 몇가지 기술들을 제공합니다.
 
@@ -47,7 +47,7 @@ dispatch queue 뿐만 아니라, Grand Central Dispatch는 몇가지 기술들�
 | Dispatch semaphores|dispatch semaphore은 전통적인 semaphore와 비슷하지만 일반적으로 더 효율 적입니다. Dispatch semaphore은 semaphore를 사용 할 수 없어 calling thread가 차단 될 필요가 있을 경우에만     kernel로 호출됩니다. semaphore가 사용 가능하다면, kernel 호출은 수행되지 않습니다. dispatch semaphore 사용 방법에 대한 예시는, Using Dispatch Semaphores to Regulate the Use of Finite Resources를 확인하세요.|
 | Dispatch sources|dispatch source는 시스템 이벤트의 특정한 타입에 대한 응답 notification을 생성합니다. dispatch source를 notification, signal, descriptor 같은 이벤트들을 다른 것들 사이에서 처리하는 이벤트 모니터링 하는데에 사용 할 수 있습니다. 이벤트가 발생하면, dispatch source는  특정 dispatch queue 처리를 위해 비동기적으로 task 코드를 전송합니다. dispatch source를 사용하고 생성하는 더 자세한 내용은, Dispatch Sources를 확인하세요.|
 
-### Block을 사용해서 task를 구현하기
+## Block을 사용해서 task를 구현하기
 
 Block object는 C, Objective-C 그리고 C++ 코드에서 사용 할 수 있는 C 기반 언어의 기능입니다. Block은 자신을 포함한 작업 단위를 쉽게 정의할 수 있게 해줍니다. 비록 함수 포인터와 유사하게 보일 수 있지만, block은 실제로 객체와 유사한 기본 자료 구조로 표현되고 컴파일러에 의해 생성되고 관리됩니다. 컴파일러는 당신이 제공한 코드를 (관련 데이터와 함께) 패키지화 하고 그것을 heap에 들어 갈 수 있는 형식으로 캡슐화 하고 앱으로 전달합니다.
 
@@ -81,7 +81,7 @@ block의 중요한 장점 중 하나는 lexical scope(정적 범위) 외부에�
 
 선언과 사용하는 법을 포함한 block에 대한 더 많은 정보는, Blocks Programming Topics를 확인하세요. dispatch queue에 block을 추가 하는 방법은, Adding Tasks to Queue를 참고하세요.
 
-### Dispatch Queue 생성과 관리
+## Dispatch Queue 생성과 관리
 
 queue에 task를 추가 하기 전에, queue의 타입과 어떻게 사용할지 결정해야 합니다. Dispath queue는 task를 연속으로 그리고 동시에 실행 할 수 있습니다. 게다가, queue를 사용할 특정한 목적을 가지고 있다면, 그에 따라 queue 속성을 정의할 수 있습니다. 아래 섹션은 dispatch queue를 생성하는 방법과 사용하기 위해 구성하는 방법을 보여 줍니다.
 
