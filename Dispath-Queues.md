@@ -93,8 +93,8 @@ queue와 같이, 그것들이 사용 되는 동안에 메모리에 유지되는�
 
 ```
 Note: concurrent dispatch queue나 main dispatch queue를 포함한 
-어떠한 global dispatch queue도 유지하거나 해제 할 필요가 없습니다. 
-queue에 유지나 해제를 위한 시도는 모두 무시됩니다.
+      어떠한 global dispatch queue도 유지하거나 해제 할 필요가 없습니다. 
+      queue에 유지나 해제를 위한 시도는 모두 무시됩니다.
 ```
 
 garbage-collected 앱을 구현 하였더라도, 당신은 여전히 dispathc queue와 dispatch 객체를 유지하고 해제해야 합니다. Grand Centeral Dispatch는 메모리를 회수하기 위한 garbage collection model을 지원하지 않습니다.
