@@ -80,3 +80,7 @@ block의 중요한 장점 중 하나는 lexical scope(정적 범위) 외부에�
 - 만약 block이 몇 개 이상의 Objective-C 객체를 생성 한다면, 그 객체들의 메모리 관리를 다루기 위해 block 코드를 @autorelease block으로 감싸야 할 것 입니다. 비록 GCD dispatch queue는 고유 autorelease pools를 갖고 있지만, pool이 언제 비울지 보장하지 않습니다. 만약 앱이 메모리에 제약이 있다면, 당신만의 autorelase pool을 생성하는 것이 autorelease된 객체를 더욱 일정한 간격으로 메모리를 해제할 수 있게 해줍니다.
 
 선언과 사용하는 법을 포함한 block에 대한 더 많은 정보는, Blocks Programming Topics를 확인하세요. dispatch queue에 block을 추가 하는 방법은, Adding Tasks to Queue를 참고하세요.
+
+### Dispatch Queue 생성과 관리
+
+queue에 task를 추가 하기 전에, queue의 타입과 어떻게 사용할지 결정해야 합니다. Dispath queue는 task를 연속으로 그리고 동시에 실행 할 수 있습니다. 게다가, queue를 사용할 특정한 목적을 가지고 있다면, 그에 따라 queue 속성을 정의할 수 있습니다. 아래 섹션은 dispatch queue를 생성하는 방법과 사용하기 위해 구성하는 방법을 보여 줍니다.
