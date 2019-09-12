@@ -84,3 +84,9 @@ block의 중요한 장점 중 하나는 lexical scope(정적 범위) 외부에�
 ### Dispatch Queue 생성과 관리
 
 queue에 task를 추가 하기 전에, queue의 타입과 어떻게 사용할지 결정해야 합니다. Dispath queue는 task를 연속으로 그리고 동시에 실행 할 수 있습니다. 게다가, queue를 사용할 특정한 목적을 가지고 있다면, 그에 따라 queue 속성을 정의할 수 있습니다. 아래 섹션은 dispatch queue를 생성하는 방법과 사용하기 위해 구성하는 방법을 보여 줍니다.
+
+### Dispatch Queue의 메모리 관리
+
+Dispatch queue 와 다른 dispatch 객체들은 refernce-counted 데이터 타입입니다. Dispatch queue를 생성하면, 1이라는 초기 reference count를 갖습니다. 필요에 따라 reference count를 증가, 감소 하기 위해 `dispatch_retain` 과 `dispatch_release` 함수를 사용 할 수 있습니다. queue의 reference count가 0으로 도달하면, 시스템은 비동기적으로 queue의 할당을 해제합니다.
+
+queue와 같이, 그것들이 사용 되는 동안에 메모리에 유지되는지 확신 하기 위해 dispatch 객체를 유지, 해제 하는 것은 중요합니다. `memory-managed` CoCoa 객체와 같이, 만약 코드로 전달 된 queue를 사용하기를 계획한다면, 그것을 사용하기 전에 queue에 유지해야 하며 더이상 필요가 없다면 해제 해야 하는 것이 일반적인 규칙입니다.
