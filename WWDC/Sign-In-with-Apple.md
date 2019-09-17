@@ -1,7 +1,9 @@
 # Sign In with Apple
 
 [Introducing Sign In with Apple - WWDC 2019 - Videos - Apple Developer](https://developer.apple.com/videos/play/wwdc2019/706)
-📌 영상 보면서 Transcript보고 번역 한 것으로, 발표 자료 보며 추후 정리 필요!
+
+
+> 📌 영상 보면서 Transcript보고 번역 한 것으로, 발표 자료 보며 추후 정리 필요!
 
 ## Overview
 
