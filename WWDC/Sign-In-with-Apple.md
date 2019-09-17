@@ -1,6 +1,7 @@
 # Sign In with Apple
 
 [Introducing Sign In with Apple - WWDC 2019 - Videos - Apple Developer](https://developer.apple.com/videos/play/wwdc2019/706)
+📌 영상 보면서 Transcript보고 번역 한 것으로, 발표 자료 보며 추후 정리 필요!
 
 ## Overview
 
@@ -42,7 +43,7 @@ Sign In with Apple은 앱의 사용자가 실제로 존재 한다는 확신을 �
 
 여러분은 이제 이 훌륭한 기능들을 보았다. 앱에 통합 되는데 실제로 필요한 것은 무엇 일까? 당신의 앱에서 구동되기 위해 필요한 4가지 핵심이 있다. 첫째로, Auto Sign In with Apple-branded 버튼이다.
 그 다음 권한 허가를 설정하고 수행하는 것이다. 사용자가 Sign In with Apple UI를 본 후에 그리고 빠르게 FaceID 체크를 한 후, 허가의 결과가 앱으로 반환 될 것이다. 이 시점에 당신은 Apple ID 서버에 결과를 검증해야 하고 당신의 시스템에 계정을 생성해야 한다. 마지막으로 특히, 당신의 앱에 반환이 된 후에  자격 증명 상태가 바뀌게 될 것이고 당신의 앱은 그 상태들을 적절히 바꿔 주어야 한다. 
-
+```swift
     // Add Sign In with Apple button to your login view
     func setUpProviderLoginView() {
     	let button = ASAutorizationAppleIDButton()
@@ -52,9 +53,10 @@ Sign In with Apple은 앱의 사용자가 실제로 존재 한다는 확신을 �
     	
     	self.loginProviderStackView.addArrangedSubview(button)
     }
+```
 
 첫번째로, Sign In With Apple 버튼에 대해 알아보자. 아주 적은 코드로, AutorizationAppleIDButton을 앱에 추가 할 수 있다. 일단 초기화를 하고, action을 추가해라. 그리고 그게 너가 해야 할 모든 것이다. 그 버튼은 당신의 앱 디자인에 맞게 몇가지 커스터마이징 된 버튼을 제공한다. 시각적인 스타일의 차이와 label의 차이를 사용 할 수 있다. 현재 검증 API를 사용 하고 있는 앱은 매우 친숙 하다는 걸 알 수 있을 것이다. 다음으로, 사용자가 action을 수행하면, 요청을 설정하고 검증을 수행해야 한다. 어떻게 하는지 보자.
-
+```swift
     // Configure request, setup delegates and perform authorization request
     @objc func handleAuthorizationButtonPress() {
     	let request = ASAutoriztionAppleIDProver().createRequest()
@@ -67,6 +69,7 @@ Sign In with Apple은 앱의 사용자가 실제로 존재 한다는 확신을 �
     
     	controller.performRequest()
     }
+```
 
 단지 코드 한 줄로, Apple ID 권한 요청을 초기화 한다.
 이것이 당신의 시스템에서 계정을 생성하기 위해 앱에서 해야 할 모든 것이다.
@@ -75,7 +78,7 @@ Sign In with Apple은 앱의 사용자가 실제로 존재 한다는 확신을 �
 마지막으로, 요청을 수행한다. 요청을 수행하면, authorization UI가 유저에게 보여지도록 초기화 될 것이다.
 
 빠른 FaceID 체크 후에, 허가 결과가 앱으로 리턴 될 것이다.
-
+```swift
     func authorizationController(controller _: ASAuthorizationController,
     														didCompleteWithAuthorization authorization: ASAutorization) {
     	if let credential = authorization.credential as? ASAuthorizationAppleIDCredential {
@@ -91,6 +94,7 @@ Sign In with Apple은 앱의 사용자가 실제로 존재 한다는 확신을 �
     														didCompleteWithError error: Error) {
     	// Handle error
     }
+```
 
 이 결과를 다루는 법에 대해 이야기 해보자. AuthorizationController의 didCompleteWithAuthoization 메소드를 통해, authorization 객체를 받게 될 것이다. 이 객체는 AppleIDCredential 타입의 credential 프로퍼티를 갖고 있다. 진행을 하기 전에 이것이 실제 AppleIDCredential 인지 체크 해봐야 한다. 이 객체는 시스템에서 계정을 생성하기 위해 필요한 모든 정보를 가지고 있다. 사용자가 요청을 취소하거나 어떤 에러가 발생하면, didCompleteWithError 콜백을 통해 앱이 알도록 할 것이다. 이 delegate 콜백 모두 앱의 메인 큐에서 만들어 진다는 것이 보장된다. 이제 우리가 앱에게 보내줄 결과에 대해 더 깊게 알아보자. 먼저, user identifier다. 이것은 고유하고, 안정적이고, 팀 범위의 유저 식별자이다. 이것은 훌륭하다. 다른 플랫폼, 다른 시스템, 웹, 안드로이드에 걸쳐 사용자 시스템에서 정보를 찾을 때 사용된다.
 그리고 이것은 당신의 개발 팀과 연관 되어있다. 이것이 당신의 사용자의 키 값이다.
@@ -103,7 +107,7 @@ Sign In with Apple은 앱의 사용자가 실제로 존재 한다는 확신을 �
 자 이제 당신은 시스템에서 계정을 생성 했다. 사용자가 애플 디바이스를 앱에서 사용하는 하면, credential 상태는 변할 것이다. 그리고 이 시나리오를 적절하게 다룰 필요가 있다.
 
 사용자가 앱에서 Apple ID를 사용하는 것을 중단 할 수 있다. 그것은 디바이스에서 로그 아웃 될 것이다. 이런 이벤트 들은 적절하게 다루어져야 한다. 이것을 허용하기 위해서는, authentication servies framework는 이 상태를 질의 하기 위한 빠른 API를 노출 할 것이다.
-
+```swift
     let provider = ASAuthorizationAppleIDProvider()
     
     provider.getCredentialState(forUserID: "currentUserIdentifier") { (credentialState, error) in
@@ -117,19 +121,21 @@ Sign In with Apple은 앱의 사용자가 실제로 존재 한다는 확신을 �
     	default: break
     	}
     }
+```
 
 이전에 Apple ID Credential을 통해 반환 된 user identifier 를 사용해서, 현재 Apple ID Credential의 상태를 호출해 GetCredentialState를 확인 할 수 있다.
 
 이것은 매우 빠른 API 호출이다. 이것은 세가지를 리턴한다. 우리는 user가 인증 되었는지 알려 줄 수 있고, 당신은 그들에게 앱을 계속 사용 할 수 있도록 해야한다. credential은 폐기 될 수 있다.
 
 당신은 해당 디바에스에서 앱에서 로그아웃 시켜야 한다 그리고 선택적으로 그들에게 다시 로그인 하도록 안내한다. NotFound는 이전에 사용자가 Sign In with Apple을 통해 관계를 맺은 적이 없다는 것이다. 이 API는 매우 빠르다. 이 상태들 각각에 맞는 경험을 제공하기 위해 이것을 앱이 런치 될 때 이것을 호출 해야 한다. 
-
+```swift
     // Register for revocation notification
     let center = NotificationCenter.default
     let name = NSNotificationName.Name
     let observer = center.addObserver(forName: name, object: nil, queue: nil) { (Notification) in
     	// Sign the user out, optionally guide them to sign in again
     }
+```
 
 추가적으로, 우리는 credential state가 revoke로 변할 때 NotificationCenter을 통해 notification을 보낸다. 
 해당 디바에스에서 로그 아웃 시키고 부가적으로 다시 로그인 하도록 안내해라.
@@ -138,6 +144,7 @@ Sign In with Apple은 앱의 사용자가 실제로 존재 한다는 확신을 �
 
 최고의 유저 경험을 위해, 당신의 앱은 존재하는 로컬 계정이 없다면 이 시작 기능을 호출해야 할 것이다. 이것을 구현하는 쉬운 방법을 보도록 하자.
 
+```swift
     // Prompts the user if an existing iCloud Keychain credential or Apple ID credential exists.
     func performExistingAccountSetupFlows() {
     	// Prepare requests for both Apple ID and password providers.
@@ -150,9 +157,11 @@ Sign In with Apple은 앱의 사용자가 실제로 존재 한다는 확신을 �
     	authorizationController.presentationContextProvider = self
     	authorizationController.performRequests()
     }
+```
 
 처음으로, 존재하는 Apple ID authorization 요청과 Apple ID password 요청 배열을 초기화 한다. 이게 끝이다. 간단하다. request array를 전달하고 요청을 수행한다. 
 
+```swift
     func authorizationController(controller _: ASAuthorizationController, 
     														didCompleteWithAuthorization authorization: ASAuthorization) {
     	switch authorization.credential {
@@ -164,6 +173,7 @@ Sign In with Apple은 앱의 사용자가 실제로 존재 한다는 확신을 �
     	defaul: break
     	}
     }
+```
 
 Sign In with Apple connection이 존재 한다면, AppleIDCredenital은 앱으로 반환 할 것이다.
 
