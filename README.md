@@ -6,7 +6,7 @@
 - [Dispath Queues](./Dispath-Queues.md)
 
 - [Increasing Performance by Reducing Dynamic Dispatch](./Increasing-Performance-by-Reducing-Dynamic-Dispatch.md)
-
+- [Automatic Reference Counting](./Automatic-Reference-Counting.md)
 
 ## WWDC
 - [Sign In with Apple](./WWDC/Sign-In-with-Apple.md)
