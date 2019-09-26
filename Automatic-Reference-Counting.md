@@ -40,3 +40,45 @@ Reference counting은 클래스의 인스턴스에서만 적용 가능합니다.
 ```
 
  `Person` 클래스는 인스턴스의 `name` 프로퍼티를 세팅하고 초기화가 진행 중임을 나타내는 메시지를 출력 해주는 생성자를 갖고 있습니다. `Person` 클래스는 클래스의 인스턴스가 해제 될 때 메세지를 출력하는 소멸자 또한 가지고 있습니다.
+
+다음 코드는 `Person` 인스턴스를 생성하기 위해 사용 되는 다수의 참조를  `Person?` 타입의 3개의 변수를 정의하고 있습니다. 이 변수들이 옵셔널 타입이기 때문에(`Person`이 아닌,`Person?`), 자동으로 `nil` 값으로 초기화 되고, 현재는 `Person` 인스턴스를 참조하고 있지 않습니다.
+
+```swift
+    var reference1: Person?
+    var reference2: Person?
+    var reference3: Person?
+```
+
+이제 새로운 `Person` 인스턴스를 초기화하고 3개 변수들 중 하나를 할당 할 수 있습니다.
+
+```swift
+    refernce1 = Person(name: "Jinha Park")
+    // Prints "Jinha Park is being initialized"
+```
+
+`Person`클래스의 생성자를 호출하는 시점에 "Jinha Park is being initialized" 라는 메세지가 출력되는 것을 주목하세요. 이것은 초기화가 이루어졌다는 것을 확인해 줍니다.
+
+`Person`인스턴스가 `reference1` 변수에 할당이 되었기 때문에, `reference1`에서 `Person`인스턴스에 강한 참조가 되고 있습니다. 적어도 하나의 강한 참조가 있기 때문에, ARC는 `Person`을 메모리에 유지 시키도록 할 것이고 해제되지 않습니다.
+
+같은 `Person`인스턴스를 두 개의 변수에 더 할당하면, 인스턴스에 두개의 강한 참조가 생기게 됩니다.
+
+```swift
+    refernce2 = refernce1
+    refernce3 = refernce1
+```
+
+여기엔 하나의 `Person` 인스턴스에 세개의 강한 참조가 있습니다.
+
+만약 이 두개의 강한 참조(기존 참조를 포함한)를 두개의 변수에 nil을 할당으로서 깨고 싶다면, 하나의 강한 참조는 남아있고, `Person`인스턴스는 해제되지 않을 것입니다.
+
+```swift
+    refernce1 = nil
+    refernce2 = nil
+```
+
+ARC는 세번째 그리고 마지막 강한 참조가 깨지기 전까지, `Person`인스턴스를 해제하지 않습니다. `Person` 인스턴스를 더이상 사용 하지 않는 시점에 해제 됩니다.
+
+```swift
+    refernce3 = nil
+    // Prints "Jinha Park is being deinitialized"
+```
