@@ -118,3 +118,49 @@ ARC는 세번째 그리고 마지막 강한 참조가 깨지기 전까지, `Pers
 모든 `Person` 인스턴스는 `String` 차입의 `name` 프로퍼티와 `nil`로 초기화 된 옵셔널 타입의 `apartment`프로퍼티를 가지고 있습니다. 사람이 항상 아파트를 가지고 있지 않기 때문에 `apartment` 프로퍼티는 옵셔널입니다.
 
 유사하게, 모든 `Apartment`는 `String`타입의 `unit`과 `nil`로 초기화 된 옵셔널 타입 `tenant`을 가지고 있습니다. 아파트에 항상 세입자가  있는 것이 아니기 때문에 세입자 프로퍼티는 옵셔널 입니다.
+
+두 클래스 모두 클래스의 인스턴스가 해제 되었다는 사실을 출력 해주는 소멸자를 정의하고 있습니다.  이것은 `Person`와 `Apartment`의 인스턴스가 예상대로 해제 되었는지를 볼 수 있게 해줍니다.
+
+다음 코드는 아래 코드에서 특정 `Apartment`와 `Person` 인스턴스에 대입 될, 옵셔널 타입인 `jinha`와 `unit4A` 라는 두개의 변수를 정의 하고 있습니다. 두개의 변수 모두 옵셔널 이기 때문에 `nil` 이라는 초기값을 가지고 있습니다.
+
+```swift
+    var jinha: Person?
+    var unit4A: Apartment?
+```
+
+이제 특정 `Person`인스턴스와 `Apartment` 인스턴스를 생성 할 수 있고 이 인스턴스들을 `jinha`와 `unit4A`에 할당 할 수 있습니다.
+
+```swift
+    jinha = Person(name: "Jinha Park")
+    unit4A = Apartment(unit: "4A")
+```
+
+두 인스턴스들을 생성하고 할당 한 뒤에 강한 참조가 어떻게 보여 지는지 여기 있습니다. `jinha` 변수는 이제  `Person` 인스턴스에 강한 참조를 가지고 있고, `unit4A` 변수는 `Apartment`인스턴스에  강한 참조를 가지고 있습니다. 
+
+![](https://docs.swift.org/swift-book/_images/referenceCycle01_2x.png)
+
+이제 사람이 아파트를 갖도록, 두개의 인스턴스를 연결 시킬 수 있습니다. 그리고 아파트는 세입자를 가지고 있습니다. 느낌표(!)가 이 인스턴스들의 프로퍼티가 세팅 될 수 있도록 `jinha`와 `unit4A` 옵셔널 변수에 저장되어 있는 인스턴스를 언래핑하고 접근 하기 위해 사용 되고 있는 것에 주목하세요. 
+
+```swift
+    jinha!.apartment = unit4A
+    unit4A!.tenant = jinha
+```
+
+여기에 두개의 인스턴스가 같이 연결 된 후 강한 순환 참조가 어떻게 보이는지가 있습니다.
+
+![](https://docs.swift.org/swift-book/_images/referenceCycle02_2x.png)
+
+불행히도, 두 인스턴스를 연결 하는 것은 그것들 사이에 강한 순환 참조를 만듭니다. `Person` 인스턴스는 이제 `Apartment` 인스턴스에 강한 참조를 가지고 있고, `Apartment` 인스턴스는 `Person` 인스턴스에 강한 참조를 가지고 있습니다. 따라서, `jinha`와 `unit4A`  변수들에 연결 된 강함 참조를 깰 때, 참조 개수가 0으로 떨어지지 않을 것이고, ARC에 의해 인스턴스가 해제되지 않을 것 입니다.
+
+```swift
+    jinha = nil
+    unit4A = nil
+```
+
+이 변수들에 `nil`을 대입해도 소멸자 또한 호출 되지 않는 것에 유의하세요. 강한 참조 순환은 앱에 메모리 누수를 발생시키며, `Person`과  `Apartment` 인스턴스가 해제되는 것을 막습니다.
+
+이것이 `jinha`와 `unit4A` 변수에 `nil`을 대입 한 후 강한 순환 참조의 모습입니다.
+
+![](https://docs.swift.org/swift-book/_images/referenceCycle03_2x.png)
+
+`Person`인스턴스와  `Apartment` 인스턴스 사이의 강한 참조는 유지되고 없어지지 않습니다.
