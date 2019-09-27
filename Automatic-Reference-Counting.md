@@ -82,3 +82,39 @@ ARC는 세번째 그리고 마지막 강한 참조가 깨지기 전까지, `Pers
     refernce3 = nil
     // Prints "Jinha Park is being deinitialized"
 ```
+
+## 클래스 인스턴스 간 강한 순환 참조 (Strong Reference Cycles Between Class Instances)
+
+위의 예제에서, ARC는 생성한 새로운 `Person` 인스턴스의 참조의 개수를 추적 할 수 있고 `Person` 인스턴스가 더이상 필요 없을 때 해제 할 수 있습니다.
+
+하지만, 클래스의 인스턴스의 강한 참조가 0 이 되는 시점이 전혀 생기지 않는 코드를 작성하게 될 수도 있습니다. 이것은 두 개의 클래스 인스턴스가 서로 강한 참조를 하고, 각각의 인스턴스가 다른 인스턴스를 살려 둘 경우에 발생할 수 있습니다. 이것은 강한 참조 순환이라고 알려져 있습니다.
+
+클래스 간의 관계를 strong 참조 대신 weak 또는 unowned 참조로 정의 함으로써 강한 순환 참조를 해결 할 수 있습니다. 이 과정은 클래스 인스턴스 간의 강한 순환 참조 해결하기(Resolving Strong Refernce Cycles Between Class Instances)에서 설명되어 있습니다. 하지만, 강한 참조 순환의 해결 방법을 배우기 전에, 강한 순환 참조가 어떻게 발생 하는지에 대해 이해하는 것이 도움이 될 것 입니다.
+
+여기 강한 순환 참조가 어떻게 우연히 생기는 지에 대한 예시가 있습니다. 이 예시는  아파트의 단지와 거주자의 모델화한 `Person`과 `Apartment`라는 클래스를 정의 하고 있습니다.
+
+```swift
+    class Person {
+    	let name: String
+    	
+    	init(name: String) { self.name = name }
+    
+    	var apartment: Apartment?
+    
+    	deinit { print("\(name) is being deinitialized") }
+    }
+    
+    class Apartment {
+    	let unit: String
+    	
+    	init(unit: String) { self.unit = unit }
+    
+    	var tenant: Person?
+    
+    	deinit { print("Apartment \(unit) is being deinitialized") }
+    }
+```
+
+모든 `Person` 인스턴스는 `String` 차입의 `name` 프로퍼티와 `nil`로 초기화 된 옵셔널 타입의 `apartment`프로퍼티를 가지고 있습니다. 사람이 항상 아파트를 가지고 있지 않기 때문에 `apartment` 프로퍼티는 옵셔널입니다.
+
+유사하게, 모든 `Apartment`는 `String`타입의 `unit`과 `nil`로 초기화 된 옵셔널 타입 `tenant`을 가지고 있습니다. 아파트에 항상 세입자가  있는 것이 아니기 때문에 세입자 프로퍼티는 옵셔널 입니다.
