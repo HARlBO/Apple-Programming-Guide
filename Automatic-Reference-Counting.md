@@ -164,3 +164,11 @@ ARC는 세번째 그리고 마지막 강한 참조가 깨지기 전까지, `Pers
 ![](https://docs.swift.org/swift-book/_images/referenceCycle03_2x.png)
 
 `Person`인스턴스와  `Apartment` 인스턴스 사이의 강한 참조는 유지되고 없어지지 않습니다.
+
+## 클래스 인스턴스 간의 강한 순환 참조 해결하기(Resolving Strong Refernce Cycles Between Class Instances)
+
+Swift 클래스 타입의 프로퍼티와 관련해서 강한 순환 참조를 해결하기 위한 weak참조와 unowned참조 두가지 방법을 제공합니다. 
+
+weak과 unowned 참조는 순환 참조 안의 하나의 인스턴스가 다른 인스턴스를 강하게 유지하지 않은 채로 참조 할 수 있게 합니다. 이 인스턴스는 강한 순환 참조를 만들지 않고 서로 참조 할 수 있습니다.
+
+다른 인스턴스가 더 짧은 생명 주기를 가지고 있을 때, 즉 다른 인스턴스가 먼저 해제 될 수 있을 때, weak참조를 사용하세요. 위의 `Apartment` 예제에서, 아파트는 생명주기의 어떤 시점에 아파트의 세입자가 없는 것이 적절하고,  그래서 이 경우에 weak 참조는 가 순환 참조를 깨는 적절한 방법 입니다. 반대로, unowned 참조는 다른 인스턴스가 같은 생명 주기를 같거나 더 긴 생명주기를 가질 때 사용 하세요.
