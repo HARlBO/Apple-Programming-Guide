@@ -1,6 +1,6 @@
 # Increasing Performance by Reducing Dynamic Dispatch
 
-[Increasing Performance by Reducing Dynamic Dispatch - Swift Blog](https://developer.apple.com/swift/blog/?id=27)
+🔗 [Increasing Performance by Reducing Dynamic Dispatch - Swift Blog](https://developer.apple.com/swift/blog/?id=27)
 
 다른 많은 언어들 처럼, Swift는 클래스에서 superclass에 선언된 메소드와 프로퍼티를 override 할 수 있습니다. 이것은 프로그램이 런타임에 어떤 메소드나 프로퍼티가 참조 되었는지 결정해야 하고 직접 호출 또는 간접 접근을 수행해야 한다는 것을 의미합니다. 다이나믹 디스패치(dynamic dispath)로 불리는 이 기술은, 각각의 간접적 사용에 따라 거듭되는 런타임 오버헤드의 비용으로 언어의 표현성을 증가시킵니다. 성능에 민감한 코드에서 그러한 오버헤드는 바람직하지 않습니다. 이 글은 dynamism을 제거함으로써(`final`, `private`, 모듈 최적화) 성능을 향상시키는 세가지 방법을 보여줍니다. 
 
