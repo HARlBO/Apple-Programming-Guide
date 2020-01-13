@@ -1,3 +1,8 @@
+# Concurrency Programming Guide
+
+🔗 [Concurrency Programming Guide](https://developer.apple.com/library/archive/documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.html#//apple_ref/doc/uid/TP40008091-CH102-SW1)
+
+
 # Introduction
 
 동시성(Concurrency)은 동시에 발생하는 다수의 것들에 대한 개념이다. 멀티코어의 확산과 각각의 프로세서의 코어의 개수 증가의 실현으로, 소프트웨어 개발자는 그것들로 이득을 얻는 새로운 방식이 필요하다. OS X와 iOS 같은 운영체제는 다수의 프로그램을 병렬적으로 실행하는 것이 가능하지만, 대부분의 프로그램은 백그라운드에서 실행되고 프로세서를 연속적으로 요구하지 않는 작업을 수행한다. 유저의 관심을 끌고 컴퓨터를 계속 바쁘게 하는 것은 포그라운드의 앱이다. 만약 앱이 수행해야 할 일이 많지만 사용 할 수 있는 코어의 일부만 유지한다면, 추가 프로세싱 자원은 낭비되는 것이다.
